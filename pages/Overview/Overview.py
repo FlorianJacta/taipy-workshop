@@ -49,32 +49,22 @@ def create_bar_figure(data: pd.DataFrame, group_by: str) -> Figure:
     fig = px.bar(sales_over_time, x=group_by, y='Total', title=f'Sales Trends Over {group_by}', color='Total')
     return fig
 
-def create_sales_by_city_map(data: pd.DataFrame) -> Figure:
-    """This function creates a mapbox plot of the sales per city by:
-    1. grouping data by the `City` variable and aggregating the following function to other variables:
-    - `Total`: sum of values
-    - `Latitude`: mean
-    - `Longitude`: mean
-    2. Creating and returning a mapbox plot (px.scatter_mapbox) to represent the cities geographically per sales importance.
-
-    Parameters
-    ----------
-    data : pd.DataFrame
-        the data
-
-    Returns
-    -------
-    Figure
-        the mapbox plot representing cities by volume of sales.
-    """
-    pass
+def create_sales_by_city_map(data):
+    city_sales = data.groupby('City').agg({'Total': 'sum', 'Latitude': 'mean', 'Longitude': 'mean'}).reset_index()
+    fig = px.scatter_mapbox(city_sales, lat="Latitude", lon="Longitude", size="Total", color="Total", text="City",
+                            zoom=5, center={"lat": 18.7, "lon": 98.9}, mapbox_style="carto-darkmatter", title='Total Sales by City', size_max=50)
+    fig.update_layout(title={'text': "Total Sales by City", 'y': 0.9, 'x': 0.5, 'xanchor': 'center', 'yanchor': 'top'},
+                      legend=dict(yanchor="top", y=0.99, xanchor="left", x=0.01),
+                      margin={"r": 0, "t": 0, "l": 0, "b": 0})
+    return fig
 
 
 fig_product_line = create_pie_figure(data, 'Product_line')
 fig_city = create_pie_figure(data, 'City')
 fig_customer_type = create_pie_figure(data, 'Customer_type')
 
-Overview = None
+with tgb.Page() as Overview:
+    pass
 # TODO: Create a taipy page called "Overview" thanks to the builder (tgb)
     # TODO: In this page, create a chart containing the mapbox plot figure of the data, with height equal to 600px
     # You can use this syntax: "{my_variable}" to reference a variable or the output of a function.
