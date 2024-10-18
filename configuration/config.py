@@ -19,11 +19,11 @@ from algorithms import *
 
 from taipy import Config
 
-from taipy.config import Config, Scope
+from taipy import Config, Scope
 import datetime as dt
 
 
-#Config.configure_job_executions(mode="standalone", nb_of_workers=2)
+# Config.configure_job_executions(mode="standalone", nb_of_workers=2)
 path_to_data = "data/modified_supermarkt_sales_plus.csv"
 # TODO: we are going to configure all our data nodes into this config, start by configuring a csv data node
 #       for the initial_data_cfg using id `initial_data`, storage_type `csv`, path `path_to_data` and scope `Scope.GLOBAL`
@@ -38,7 +38,7 @@ level_cfg = ...
 date_cfg = ...
 
 # TODO: configure final_data_cfg
-final_data_cfg =  ...
+final_data_cfg = ...
 
 # TODO: we will build two models for forecasting: arima and xgboost, define their datanode config
 model_arima_cfg = ...
@@ -76,15 +76,15 @@ task_forecast_xgboost_cfg = ...
 
 # TODO: harmonize results in the `result_cfg` datanode by taking the final_data, predictions_arima and predictions_xgboost datanodes
 # as input
-task_result_cfg = Config.configure_task(id="task_result",
-                                        function=concat,
-                                        input=[final_data_cfg, 
-                                               predictions_arima_cfg, 
-                                               predictions_xgboost_cfg],
-                                        output=result_cfg)
+task_result_cfg = Config.configure_task(
+    id="task_result",
+    function=concat,
+    input=[final_data_cfg, predictions_arima_cfg, predictions_xgboost_cfg],
+    output=result_cfg,
+)
 
 # TODO: now configure the overall scenario.
 # A scenario is a collection of multiple tasks that are performed sequentially.
 scenario_cfg = ...
 
-Config.export('configuration/config.toml')
+Config.export("configuration/config.toml")
